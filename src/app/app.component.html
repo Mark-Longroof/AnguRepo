@@ -1,0 +1,169 @@
+<h1>Hello Template </h1>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Available to drag</div>
+            <div class="panel-body">
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templText">
+                    <div class="panel-body">
+                        <div>Text</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templPass">
+                    <div class="panel-body">
+                        <div>Password</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templNumber">
+                    <div class="panel-body">
+                        <div>Number</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templEmail">
+                    <div class="panel-body">
+                        <div>Email</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templRadio">
+                    <div class="panel-body">
+                        <div>Radio</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templTarea">
+                    <div class="panel-body">
+                        <div>Text Area</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templSelect">
+                    <div class="panel-body">
+                        <div>Select Options</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" dnd-draggable [dragEnabled]="true" [dragData]="templCheck">
+                    <div class="panel-body">
+                        <div>Check Box</div>
+                        <!-- <div>{{transferData | json}}</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div dnd-droppable class="panel panel-info" (onDropSuccess)="transferDataSuccess($event)">
+            <div class="panel-heading">Place to drop (Items:{{receivedData.length}})</div>
+            <div class="panel-body">
+                <div [hidden]="!receivedData.length > 0" *ngFor="let data of receivedData">{{data['label']}} => {{data['type']}}
+                  <!-- {{data | json}} -->
+                </div>
+            </div>
+        </div> <button class="button btn-primary" (click)="generateUI()">Generate UI</button>
+    </div>
+    <div *ngIf="showme" class="col-sm-6">
+    <form #formRef="ngForm" (ngSubmit)="onSubmit(formRef.value)">
+      <div class="row">
+         <div *ngFor="let item of receivedData">
+            <label>{{item.label}}</label>
+        <div [ngSwitch]="item.type">
+        <ng-template [ngSwitchCase]="'text'">
+
+          <input type="text"
+            class="form-control"
+            name="{{item.name}}"
+            placeholder=""
+            ngModel #{{item.ref}}="ngModel"
+            minlength="5"
+            required>
+          </ng-template>
+
+          <ng-template [ngSwitchCase]="'password'">
+
+                        <input type="password"
+                          class="form-control"
+                          name="{{item.name}}"
+                          placeholder=""
+                          ngModel #{{item.ref}}="ngModel"
+                          minlength="5"
+                          required>
+                        </ng-template>
+
+        <ng-template [ngSwitchCase]="'number'">
+
+          <input type="number"
+            class="form-control"
+            name="{{item.name}}"
+            placeholder=""
+            ngModel #{{item.ref}}="ngModel"
+            minlength="4"
+            required>
+          </ng-template>
+
+        <ng-template [ngSwitchCase]="'email'">
+
+          <input type="email"
+            class="form-control"
+            name="{{item.name}}"
+            placeholder=""
+            ngModel #{{item.ref}}="ngModel"
+            minlength="5"
+            required>
+          </ng-template>
+
+        <ng-template [ngSwitchCase]="'textarea'">
+          <textarea name="{{item.name}}"
+            value=""
+            placeholder=""
+            ngModel #{{item.ref}}="ngModel">
+        </textarea>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'select'">
+                    <select id="country" name="{{item.name}}" ngModel #{{item.ref}}="ngModel">
+                        <option *ngFor="let opt of item['options']" value="{{opt}}">{{opt}}</option>
+                      </select>
+
+                    </ng-template>
+
+        <ng-template [ngSwitchCase]="'radio'" *ngFor="let opt of item['options']">
+
+
+          <input type="radio"
+              name="{{item.name}}"
+              ngModel #{{item.ref}}="ngModel"
+              value={{opt}}>{{opt}}
+
+              </ng-template>
+          <ng-template [ngSwitchCase]="'checkbox'">
+              <input type="checkbox"
+              name="{{item.name}}"
+              ngModel #{{item.ref}}="ngModel"><i class="blue"></i>
+          </ng-template>
+
+              <div class="error-message" *ngIf="item['ref'].touched &&
+              item['ref']?.errors?.required">
+              The {{item.label}} is required.
+              </div>
+
+      </div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="formRef.invalid">Submit</button>
+    </form>
+  </div>
+</div>
+  <div *ngIf="showTable" style="overflow-x:auto;">
+      <table>
+          <tr>
+            <th *ngFor="let item of receivedData">{{item.label}}</th>
+          </tr>
+          <tr *ngFor="let dataa of tableData">
+            <td *ngFor="let itemm of receivedData">{{dataa[itemm.name]}}</td>
+          </tr>
+        </table>
+  </div>
